@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  arxiv-scraper:
+    build: .
+    container_name: arxiv-scraper
+    volumes:
+      - ./data:/data
+    environment:
+      - DEFAULT_DOWNLOAD_DIR=/data/downloads
+      - DEFAULT_CACHE_DIR=/data/cache
+      - DEFAULT_JSONL_PATH=/data/downloaded_ids.jsonl
+      - LOG_FILE=/data/logs/arxiv_scraper.log
+      - LOG_TO_FILE=true
+      - LOG_LEVEL=INFO
+      - API_RATE_LIMIT=3.0
+      - MAX_CONCURRENT_DOWNLOADS=5
+    # Command can be customized as needed
+    command: scrape --field cs --total 10 --format pdf
