@@ -347,7 +347,7 @@ def show_info():
     """Display information about the scraper."""
     
     logger.display_banner(f"ArXiv Enhanced Scraper v{config.version}", 
-                         "Author: Your Name <your.email@example.com>")
+                         "Author: Andrea Ladiana <ladianaandrea7@gmail.com>")
     
     logger.info("\n[bold]Configuration:[/bold]")
     
