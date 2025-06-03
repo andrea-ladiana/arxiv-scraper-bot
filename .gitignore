@@ -111,16 +111,31 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Project specific
+# Project specific - ArXiv Scraper generated files
 downloads/
+cache/
+sessions/
+data/
+logs/
 *.jsonl
+*.json
 session_*.json
 metadata_*.json
 *.tar.gz
+*.pdf
 *.log
+.arxiv-scraper/
+downloaded_ids.jsonl
+
+# Docker volumes and generated data
+/data
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
