@@ -551,6 +551,14 @@ async def _cache(days: int):
                 logger.success(f"Cleared all {cleared} cache entries")
 
 
+@cli.command()
+def gui():
+    """Launch the graphical user interface."""
+    from arxiv_scraper.gui.main import main as gui_main
+
+    gui_main()
+
+
 def main():
     """Main entry point."""
     try:
