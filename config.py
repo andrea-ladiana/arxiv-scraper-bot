@@ -34,7 +34,7 @@ class ScraperConfig(BaseModel):
     # ArXiv categories
     math_categories: List[str] = Field(default_factory=lambda: [
         'math.RT', 'math.GN', 'math.HO', 'math.QA', 'math.CV', 'math.AP', 'math.IT',
-        'math.GR', 'math.NA', 'math.SG', 'math.OC', 'math.CO', 'math.PR', 'math-ph',
+        'math.GR', 'math.NA', 'math.SG', 'math.OC', 'math.CO', 'math.PR',
         'math.CT', 'math.RA', 'math.AG', 'math.KT', 'math.GT', 'math.GM', 'math.AC', 
         'math.MP', 'math.SP', 'math.MG', 'math.FA', 'math.LO', 'math.AT', 'math.NT', 
         'math.DS', 'math.CA', 'math.ST', 'math.DG', 'math.OA'

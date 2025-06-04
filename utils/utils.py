@@ -16,16 +16,19 @@ class ValidationUtils:
     
     @staticmethod
     def validate_arxiv_id(arxiv_id: str) -> bool:
-        """Validate ArXiv ID format."""
+        """Validate ArXiv ID format (both old and new styles)."""
         if not arxiv_id:
             return False
-        
-        # Remove URL parts if present
-        if '/' in arxiv_id:
-            arxiv_id = arxiv_id.split('/')[-1]
-        
-        # Basic format validation (simplified)
-        return len(arxiv_id) > 0 and '.' in arxiv_id
+
+        # Strip common URL prefixes
+        if arxiv_id.startswith("http"):
+            arxiv_id = arxiv_id.rsplit('/', 1)[-1]
+
+        # Accept IDs like "1234.56789" or "math-ph/0123456"
+        if '.' in arxiv_id or '/' in arxiv_id:
+            return True
+
+        return False
     
     @staticmethod
     def validate_category(category: str) -> bool:
