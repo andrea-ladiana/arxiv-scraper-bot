@@ -157,7 +157,11 @@ async def _scrape(categories: Tuple[str], field: Optional[str], total: int,
         session_id=session_id,
         target_categories=target_categories,
         target_count=total,
-        download_formats=download_formats
+        download_formats=download_formats,
+        end_time=None,
+        articles_found=0,
+        articles_downloaded=0,
+        articles_skipped=0
     )
     
     # Initialize storage
@@ -246,7 +250,9 @@ async def _scrape(categories: Tuple[str], field: Optional[str], total: int,
         await storage.save_session(session)
         logger.error(f"Scraping failed: {e}")
         if debug:
-            logger.error("Debug traceback:", exc_info=True)
+            logger.error("Debug traceback:")
+            import traceback
+            traceback.print_exc()
         sys.exit(1)
 
 
