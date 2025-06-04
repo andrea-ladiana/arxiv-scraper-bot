@@ -11,7 +11,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Optional, Dict, Any, Set, Union
 from enum import Enum
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, validator
 
 
 class FileFormat(str, Enum):
@@ -45,7 +45,7 @@ class Author(BaseModel):
         description="Author's affiliation/institution"
     )
     
-    @field_validator('name')
+    @validator('name')
     def validate_name(cls, v: str) -> str:
         """Validate and normalize author name."""
         if not v or not v.strip():
@@ -119,7 +119,7 @@ class ArxivArticle(BaseModel):
         description="Author comment"
     )
     
-    @field_validator('arxiv_id')
+    @validator('arxiv_id')
     def validate_arxiv_id(cls, v: str) -> str:
         """Validate ArXiv ID format and normalize it."""
         if not v:
@@ -141,14 +141,14 @@ class ArxivArticle(BaseModel):
                 
         return v.strip()
     
-    @field_validator('title')
+    @validator('title')
     def clean_title(cls, v: Optional[str]) -> str:
         """Clean title by removing extra whitespace and newlines."""
         if not v:
             raise ValueError("Title cannot be empty")
         return v.replace('\n', ' ').replace('  ', ' ').strip()
     
-    @field_validator('categories')
+    @validator('categories', pre=True)
     def parse_categories(cls, v: Union[str, List]) -> List[str]:
         """Parse categories from various formats."""
         if isinstance(v, str):

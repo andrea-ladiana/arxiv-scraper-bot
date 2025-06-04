@@ -8,7 +8,7 @@ and environment variables through python-dotenv.
 import os
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Union
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, validator
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -87,7 +87,7 @@ class DownloadSettings(BaseModel):
         default_factory=lambda: os.getenv('DOWNLOAD_LATEST', 'true').lower() == 'true'
     )
     
-    @field_validator('download_dir', 'cache_dir', mode='after')
+    @validator('download_dir', 'cache_dir', pre=True, always=True)
     def create_dirs(cls, v: Path) -> Path:
         """Create directories if they don't exist."""
         v.mkdir(parents=True, exist_ok=True)
