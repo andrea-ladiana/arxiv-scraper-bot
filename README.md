@@ -139,6 +139,13 @@ arxiv-scraper-gui
 arxiv-scraper gui
 ```
 
+If you cloned the repository and prefer not to install the package, you can
+also start the GUI directly:
+
+```bash
+python start_gui.py
+```
+
 The GUI allows you to run scrape, search and other commands through an easy-to-
 use interface and view the log output directly in the window.
 
