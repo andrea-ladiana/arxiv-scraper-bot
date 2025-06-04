@@ -130,10 +130,13 @@ docker-compose up
 ### GUI Application
 
 The project also includes a PyQt6-based graphical interface that exposes all CLI
-features. After installing the package with GUI dependencies, launch it with:
+features. After installing the package with GUI dependencies, launch it with
+either the dedicated command or the new subcommand:
 
 ```bash
 arxiv-scraper-gui
+# or
+arxiv-scraper gui
 ```
 
 The GUI allows you to run scrape, search and other commands through an easy-to-
