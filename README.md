@@ -36,6 +36,14 @@ cd arxiv-scraper
 pip install -e .
 ```
 
+### Build Package
+
+Create the source distribution and wheel for publishing to PyPI:
+
+```bash
+python -m build
+```
+
 ### Using Docker
 
 ```bash
