@@ -3,6 +3,7 @@
 import os
 import asyncio
 import hashlib
+import re
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from datetime import datetime
@@ -24,8 +25,18 @@ class ValidationUtils:
         if arxiv_id.startswith("http"):
             arxiv_id = arxiv_id.rsplit('/', 1)[-1]
 
-        # Accept IDs like "1234.56789" or "math-ph/0123456"
-        if '.' in arxiv_id or '/' in arxiv_id:
+        # IDs may come in URL form like https://arxiv.org/abs/1234.56789
+        # Remove possible prefix "arXiv:" as well as any trailing version
+        if arxiv_id.lower().startswith("arxiv:"):
+            arxiv_id = arxiv_id.split(":", 1)[1]
+
+        # New style IDs look like "1234.56789" with optional version suffix
+        if re.fullmatch(r"\d{4}\.\d{4,5}(v\d+)?", arxiv_id):
+            return True
+
+        # Old style IDs look like "category/0123456" (e.g. "math-ph/0123456")
+        # and may include a subcategory separated by a dot
+        if re.fullmatch(r"[A-Za-z-]+(?:\.[A-Za-z-]+)?/\d{7}(v\d+)?", arxiv_id):
             return True
 
         return False
