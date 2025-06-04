@@ -1,10 +1,24 @@
 import sys
 from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QFormLayout,
-    QLabel, QLineEdit, QComboBox, QPushButton, QSpinBox, QCheckBox,
-    QFileDialog, QPlainTextEdit, QStackedWidget
+    QApplication,
+    QMainWindow,
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QFormLayout,
+    QLabel,
+    QLineEdit,
+    QComboBox,
+    QPushButton,
+    QSpinBox,
+    QCheckBox,
+    QFileDialog,
+    QPlainTextEdit,
+    QStackedWidget,
+    QProgressBar,
 )
 from PyQt6.QtCore import QProcess
+from PyQt6.QtGui import QColor
 
 # Available commands
 COMMANDS = [
@@ -24,17 +38,25 @@ class ScrapeOptions(QWidget):
         super().__init__()
         layout = QFormLayout()
         self.categories = QLineEdit()
+        self.categories.setPlaceholderText("cs.AI math.CO")
         self.field = QComboBox()
         self.field.addItems(["", "math", "cs", "physics", "biology"])
-        self.total = QSpinBox(); self.total.setMaximum(10000); self.total.setValue(100)
+        self.total = QSpinBox()
+        self.total.setMaximum(10000)
+        self.total.setValue(100)
         self.download_dir = QLineEdit("./downloads")
         self.jsonl_path = QLineEdit("./downloaded_ids.jsonl")
-        self.batch_size = QSpinBox(); self.batch_size.setMaximum(1000); self.batch_size.setValue(10)
-        self.max_retries = QSpinBox(); self.max_retries.setValue(3)
-        self.max_concurrent = QSpinBox(); self.max_concurrent.setValue(5)
+        self.batch_size = QSpinBox()
+        self.batch_size.setMaximum(1000)
+        self.batch_size.setValue(10)
+        self.max_retries = QSpinBox()
+        self.max_retries.setValue(3)
+        self.max_concurrent = QSpinBox()
+        self.max_concurrent.setValue(5)
         self.export_metadata = QCheckBox()
         self.export_bibtex = QCheckBox()
-        self.format = QComboBox(); self.format.addItems(["source", "pdf", "both"])
+        self.format = QComboBox()
+        self.format.addItems(["source", "pdf", "both"])
         layout.addRow("Categories (space separated)", self.categories)
         layout.addRow("Field", self.field)
         layout.addRow("Total", self.total)
@@ -74,10 +96,15 @@ class SearchOptions(QWidget):
         super().__init__()
         layout = QFormLayout()
         self.query = QLineEdit()
-        self.max_results = QSpinBox(); self.max_results.setMaximum(1000); self.max_results.setValue(10)
+        self.query.setPlaceholderText("quantum computing")
+        self.max_results = QSpinBox()
+        self.max_results.setMaximum(1000)
+        self.max_results.setValue(10)
         self.categories = QLineEdit()
+        self.categories.setPlaceholderText("cs.AI math.CO")
         self.download = QCheckBox()
-        self.format = QComboBox(); self.format.addItems(["pdf", "source"])
+        self.format = QComboBox()
+        self.format.addItems(["pdf", "source"])
         self.output_dir = QLineEdit("./downloads")
         layout.addRow("Query", self.query)
         layout.addRow("Max results", self.max_results)
@@ -121,7 +148,8 @@ class StatsOptions(QWidget):
         super().__init__()
         layout = QFormLayout()
         self.jsonl_path = QLineEdit("./downloaded_ids.jsonl")
-        self.format = QComboBox(); self.format.addItems(["table", "json"])
+        self.format = QComboBox()
+        self.format.addItems(["table", "json"])
         layout.addRow("JSONL path", self.jsonl_path)
         layout.addRow("Format", self.format)
         self.setLayout(layout)
@@ -135,7 +163,8 @@ class CleanupOptions(QWidget):
         super().__init__()
         layout = QFormLayout()
         self.download_dir = QLineEdit("./downloads")
-        self.days_old = QSpinBox(); self.days_old.setValue(30)
+        self.days_old = QSpinBox()
+        self.days_old.setValue(30)
         self.dry_run = QCheckBox()
         layout.addRow("Download dir", self.download_dir)
         layout.addRow("Days old", self.days_old)
@@ -143,7 +172,12 @@ class CleanupOptions(QWidget):
         self.setLayout(layout)
 
     def args(self):
-        args = ["--download-dir", self.download_dir.text(), "--days-old", str(self.days_old.value())]
+        args = [
+            "--download-dir",
+            self.download_dir.text(),
+            "--days-old",
+            str(self.days_old.value()),
+        ]
         if self.dry_run.isChecked():
             args.append("--dry-run")
         return args
@@ -154,6 +188,7 @@ class SessionOptions(QWidget):
         super().__init__()
         layout = QFormLayout()
         self.session_id = QLineEdit()
+        self.session_id.setPlaceholderText("abcd1234")
         self.list_sessions = QCheckBox()
         self.errors = QCheckBox()
         layout.addRow("Session ID", self.session_id)
@@ -176,7 +211,8 @@ class CacheOptions(QWidget):
     def __init__(self):
         super().__init__()
         layout = QFormLayout()
-        self.days = QSpinBox(); self.days.setValue(7)
+        self.days = QSpinBox()
+        self.days.setValue(7)
         layout.addRow("Days", self.days)
         self.setLayout(layout)
 
@@ -211,15 +247,18 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("ArXiv Scraper GUI")
-        central = QWidget(); self.setCentralWidget(central)
+        central = QWidget()
+        self.setCentralWidget(central)
         vbox = QVBoxLayout(central)
         top = QHBoxLayout()
         vbox.addLayout(top)
 
-        self.command_combo = QComboBox(); self.command_combo.addItems(COMMANDS)
+        self.command_combo = QComboBox()
+        self.command_combo.addItems(COMMANDS)
         top.addWidget(QLabel("Command:"))
         top.addWidget(self.command_combo)
         self.run_button = QPushButton("Run")
+        self.run_button.setStyleSheet("padding: 6px 12px;")
         top.addWidget(self.run_button)
 
         self.stack = QStackedWidget()
@@ -229,9 +268,17 @@ class MainWindow(QMainWindow):
             widget = OPTION_WIDGETS[cmd]()
             self.stack.addWidget(widget)
         self.command_combo.currentIndexChanged.connect(self.stack.setCurrentIndex)
-        self.output = QPlainTextEdit(); self.output.setReadOnly(True)
+        self.output = QPlainTextEdit()
+        self.output.setReadOnly(True)
+        self.output.setStyleSheet(
+            "background-color: #1e1e1e; color: #e0e0e0; font-family: monospace;"
+        )
+        self.progress = QProgressBar()
+        self.progress.setRange(0, 0)
+        self.progress.hide()
         vbox.addWidget(QLabel("Output:"))
         vbox.addWidget(self.output)
+        vbox.addWidget(self.progress)
 
         self.process = None
         self.run_button.clicked.connect(self.run_command)
@@ -244,17 +291,44 @@ class MainWindow(QMainWindow):
         self.process = QProcess(self)
         self.process.setProgram(sys.executable)
         self.process.setArguments(["-m", "arxiv_scraper.cli.main", cmd] + opts_widget.args())
-        self.process.readyReadStandardOutput.connect(lambda: self.read_output(self.process.readAllStandardOutput()))
-        self.process.readyReadStandardError.connect(lambda: self.read_output(self.process.readAllStandardError()))
+        self.process.readyReadStandardOutput.connect(
+            lambda: self.read_output(self.process.readAllStandardOutput())
+        )
+        self.process.readyReadStandardError.connect(
+            lambda: self.read_output(self.process.readAllStandardError())
+        )
+        self.process.finished.connect(self.process_finished)
+        self.run_button.setEnabled(False)
+        self.progress.show()
         self.process.start()
 
+    def process_finished(self):
+        self.run_button.setEnabled(True)
+        self.progress.hide()
+
     def read_output(self, data):
-        text = bytes(data).decode('utf-8')
+        text = bytes(data).decode("utf-8")
         self.output.appendPlainText(text)
 
 
 def main():
     app = QApplication(sys.argv)
+    app.setStyle("Fusion")
+    palette = app.palette()
+    palette.setColor(palette.ColorRole.Window, QColor(53, 53, 53))
+    palette.setColor(palette.ColorRole.WindowText, QColor(220, 220, 220))
+    palette.setColor(palette.ColorRole.Base, QColor(35, 35, 35))
+    palette.setColor(palette.ColorRole.AlternateBase, QColor(53, 53, 53))
+    palette.setColor(palette.ColorRole.ToolTipBase, QColor(220, 220, 220))
+    palette.setColor(palette.ColorRole.ToolTipText, QColor(220, 220, 220))
+    palette.setColor(palette.ColorRole.Text, QColor(220, 220, 220))
+    palette.setColor(palette.ColorRole.Button, QColor(53, 53, 53))
+    palette.setColor(palette.ColorRole.ButtonText, QColor(220, 220, 220))
+    palette.setColor(palette.ColorRole.BrightText, QColor(255, 0, 0))
+    palette.setColor(palette.ColorRole.Link, QColor(42, 130, 218))
+    palette.setColor(palette.ColorRole.Highlight, QColor(42, 130, 218))
+    palette.setColor(palette.ColorRole.HighlightedText, QColor(35, 35, 35))
+    app.setPalette(palette)
     window = MainWindow()
     window.resize(800, 600)
     window.show()
