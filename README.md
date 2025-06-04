@@ -36,6 +36,14 @@ cd arxiv-scraper
 pip install -e .
 ```
 
+### Build Package
+
+Create the source distribution and wheel for publishing to PyPI:
+
+```bash
+python -m build
+```
+
 ### Using Docker
 
 ```bash
@@ -118,6 +126,18 @@ docker run -v "$(pwd)/data:/data" yourusername/arxiv-scraper scrape --field cs -
 # Or with docker-compose
 docker-compose up
 ```
+
+### GUI Application
+
+The project also includes a PyQt6-based graphical interface that exposes all CLI
+features. After installing the package with GUI dependencies, launch it with:
+
+```bash
+arxiv-scraper-gui
+```
+
+The GUI allows you to run scrape, search and other commands through an easy-to-
+use interface and view the log output directly in the window.
 
 ## Command Reference
 

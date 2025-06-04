@@ -34,6 +34,7 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "rich>=13.0.0",
     "tenacity>=8.2.0",
+    "PyQt6>=6.5.0",
 ]
 
 [project.optional-dependencies]
@@ -57,9 +58,13 @@ docs = [
 
 [project.scripts]
 arxiv-scraper = "arxiv_scraper.cli.main:main"
+arxiv-scraper-gui = "arxiv_scraper.gui.main:main"
 
 [tool.setuptools]
-packages = ["arxiv_scraper"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["arxiv_scraper*"]
 
 [tool.pytest.ini_options]
 minversion = "7.0"
