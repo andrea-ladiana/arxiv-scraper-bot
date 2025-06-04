@@ -158,7 +158,7 @@ class ScraperLogger:
     
     def display_detailed_session(self, session: Any) -> None:
         """Display detailed session information."""
-        # This will be implemented with the actual session object
+        # Usa i dati di `ScrapingSession` per mostrare i dettagli
         self.console.print(Panel(
             f"[bold]Session ID:[/bold] {session.session_id}\n"
             f"[bold]Start Time:[/bold] {session.start_time.isoformat()}\n"
